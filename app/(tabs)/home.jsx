@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 import SearchInput from "../../components/SearchInput";
@@ -7,7 +7,35 @@ import { images } from "../../constants";
 import Trending from "../../components/Trending";
 import EmptyState from "../../components/EmptyState";
 
+import { getAllPosts } from "../../lib/appwrite.js"
+
 const Home = () => {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await getAllPosts();
+        setData(response);
+        console.log(response);  // This should now log the data
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error', error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Fetch data when component mounts
+    fetchData();
+  }, []);
+
+
+
+
   const [refresing, setRefresing] = useState(false);
 
   const onRefresh = async () => {
@@ -19,7 +47,7 @@ const Home = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={[{id: 1}, {id: 2}, {id: 3},]}
+        data={[{id: 18}, {id: 28}, {id: 38},]}
         // data={[]}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
