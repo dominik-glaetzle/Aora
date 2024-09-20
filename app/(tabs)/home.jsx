@@ -7,51 +7,29 @@ import { images } from "../../constants";
 import Trending from "../../components/Trending";
 import EmptyState from "../../components/EmptyState";
 
-import { getAllPosts } from "../../lib/appwrite.js"
+import { getAllPosts } from "../../lib/appwrite.js";
+import useAppwrite from "../../lib/useAppwrite.js";
+import VideoCard from "../../components/VideoCard.jsx";
 
 const Home = () => {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        const response = await getAllPosts();
-        setData(response);
-        console.log(response);  // This should now log the data
-      } catch (error) {
-        console.error(error);
-        Alert.alert('Error', error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Fetch data when component mounts
-    fetchData();
-  }, []);
-
-
-
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
 
   const [refresing, setRefresing] = useState(false);
 
   const onRefresh = async () => {
     setRefresing(true);
-    // re call videos -> if any new videos appear
+    await refetch();
     setRefresing(false);
-  }
+  };
+  // console.log(posts)
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={[{id: 18}, {id: 28}, {id: 38},]}
-        // data={[]}
+        data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <Text className="text-white text-2xl">{item.id}</Text>
+          <VideoCard video={ item }/>
         )}
         ListHeaderComponent={() => (
           <View className="flex my-6 px-4 space-y-6">
@@ -79,8 +57,7 @@ const Home = () => {
               <Text className="text-gray-100 text-lg mb-3 font-pregular">
                 Latest Videos
               </Text>
-
-              <Trending posts={[{id : 1}, {id : 2}, {id: 3}] ?? []}/>
+              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
             </View>
           </View>
         )}
@@ -90,7 +67,9 @@ const Home = () => {
             subtitle="Be the first one to upload a video"
           />
         )}
-        refreshControl={<RefreshControl refreshing={refresing} onRefresh={onRefresh}/>}
+        refreshControl={
+          <RefreshControl refreshing={refresing} onRefresh={onRefresh} />
+        }
       />
     </SafeAreaView>
   );
