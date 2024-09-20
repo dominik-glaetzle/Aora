@@ -7,12 +7,13 @@ import { images } from "../../constants";
 import Trending from "../../components/Trending";
 import EmptyState from "../../components/EmptyState";
 
-import { getAllPosts } from "../../lib/appwrite.js";
+import { getAllPosts, getLatestPosts } from "../../lib/appwrite.js";
 import useAppwrite from "../../lib/useAppwrite.js";
 import VideoCard from "../../components/VideoCard.jsx";
 
 const Home = () => {
   const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const [refresing, setRefresing] = useState(false);
 
@@ -21,7 +22,6 @@ const Home = () => {
     await refetch();
     setRefresing(false);
   };
-  // console.log(posts)
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -57,7 +57,7 @@ const Home = () => {
               <Text className="text-gray-100 text-lg mb-3 font-pregular">
                 Latest Videos
               </Text>
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
+              <Trending posts={latestPosts ?? []} />
             </View>
           </View>
         )}
