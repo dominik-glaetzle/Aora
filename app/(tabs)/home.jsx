@@ -38,8 +38,8 @@ const Home = () => {
                 <Text className="font-pmedium text-sm text-gray-100">
                   Welcome Back
                 </Text>
-                <Text className="text-2xl font-psemibold text-white">
-                  JSMastery
+                <Text className="text-2xl font-psemibold text-red-600">
+                  skier420
                 </Text>
               </View>
 
