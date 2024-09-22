@@ -16,7 +16,6 @@ const Profile = () => {
   const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
   const logOut = async () => {
     await signOut();
-    console.log("logging out")
     setUser(null);
     setIsLoggedIn(false);
     router.replace('/sign-in')

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 import SearchInput from "../../components/SearchInput";
+import { useGlobalContext } from "../../context/GlobalProvider.js";
 
 import { images } from "../../constants";
 import Trending from "../../components/Trending";
@@ -14,6 +15,7 @@ import VideoCard from "../../components/VideoCard.jsx";
 const Home = () => {
   const { data: posts, refetch } = useAppwrite(getAllPosts);
   const { data: latestPosts } = useAppwrite(getLatestPosts);
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
 
   const [refresing, setRefresing] = useState(false);
 
@@ -39,7 +41,7 @@ const Home = () => {
                   Welcome Back
                 </Text>
                 <Text className="text-2xl font-psemibold text-red-600">
-                  skier420
+                {user?.username}
                 </Text>
               </View>
 
