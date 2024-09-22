@@ -1,42 +1,64 @@
 import { View, Text, ScrollView, Image, Alert } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
 import { Link } from "expo-router";
-
+import { useGlobalContext } from "../../context/GlobalProvider.js";
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { getCurrentUser, signIn } from "../../lib/appwrite";
+import { getCurrentUser, signIn, deleteSessions } from "../../lib/appwrite";
+import { router } from "expo-router";
 
 const SignIn = () => {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
+  const [isSubmitting, setSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     email: '',
-    password: '',
+    password: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  // Check for an active session
+  const checkActiveSession = async () => {
+    try {
+      const user = await getCurrentUser();
+      return user;
+    } catch (error) {
+      // No active session
+      return null;
+    }
+  };
 
   const submit = async () => {
-    if(!form.email || !form.password) {
-      Alert.alert('Error', 'Please fill in all fields')
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
+      return; // Exit early if validation fails
     }
 
-    setIsSubmitting(true);
+    setSubmitting(true);
 
     try {
+      const activeSession = await checkActiveSession();
+
+      if (activeSession) {
+        // Delete the active sessions if one exists
+        await deleteSessions();
+      }
+
+      // Proceed with sign-in
       await signIn(form.email, form.password);
       const result = await getCurrentUser();
       setUser(result);
-      setIsLogged(true);
-      Alert.alert("Success", "User signed in successfully");
-      router.replace('/home')
+      setIsLoggedIn(true);
+
+      // Alert.alert("Success", "User signed in successfully");
+      router.replace("/home");
     } catch (error) {
-      Alert.alert('Error', error.message);
+      Alert.alert("Error", error.message);
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
