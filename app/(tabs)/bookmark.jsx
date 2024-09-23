@@ -39,6 +39,8 @@ const Bookmark = () => {
           <EmptyState
             title="No saved videos found"
             subtitle="No saved videos found for this search query"
+            buttontext="Browse Videos"
+            route='/home'
           />
         )}
       />
