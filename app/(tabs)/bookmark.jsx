@@ -38,7 +38,7 @@ const Bookmark = () => {
         ListEmptyComponent={() => (
           <EmptyState
             title="No saved videos found"
-            subtitle="No saved videos found for this search query"
+            subtitle="No saved videos found for this query"
             buttontext="Browse Videos"
             route='/home'
           />

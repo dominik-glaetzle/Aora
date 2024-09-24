@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Video, ResizeMode } from "expo-av";
 
 import { icons } from "../constants";
+import VideoMenu from "./VideoCardMenu";
 
 const VideoCard = ({
   video: {
@@ -42,7 +43,7 @@ const VideoCard = ({
           </View>
         </View>
         <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+          <VideoMenu/>
         </View>
       </View>
 
