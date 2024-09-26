@@ -4,17 +4,20 @@ import { useState, useEffect } from "react";
 import { Video, ResizeMode } from "expo-av";
 
 import { icons } from "../constants";
-import VideoMenu from "./VideoCardMenu";
+import Heart from "./Heart";
 
 const VideoCard = ({
   video: {
+    $id,
     title,
     thumbnail,
     video,
+    likedBy,
     creator: { username, avatar },
   },
 }) => {
   const [play, setPlay] = useState(false);
+  // console.log("likedby: ", likedBy)
   return (
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start">
@@ -43,7 +46,7 @@ const VideoCard = ({
           </View>
         </View>
         <View className="pt-2">
-          <VideoMenu/>
+          <Heart videoId={ $id } likedBy={ likedBy } />
         </View>
       </View>
 
